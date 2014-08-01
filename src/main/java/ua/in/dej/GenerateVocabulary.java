@@ -18,7 +18,6 @@ package ua.in.dej;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import sun.misc.IOUtils;
 
 import java.io.*;
 

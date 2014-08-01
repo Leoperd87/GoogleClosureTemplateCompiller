@@ -18,6 +18,7 @@ package ua.in.dej;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.codehaus.plexus.util.DirectoryScanner;
 
 import java.io.File;
 
@@ -49,6 +50,12 @@ public class MakeTranslate
      * @parameter default-value=true
      */
     private boolean shouldProvideRequireSoyNamespaces;
+
+    /**
+     * Remove soy files
+     * @parameter default-value=true
+     */
+    private boolean removeSoyFiles;
 
     /**
      * Code style
@@ -91,5 +98,19 @@ public class MakeTranslate
         testMx.setShouldProvideRequireSoyNamespaces(shouldProvideRequireSoyNamespaces);
         testMx.setOutputPathFormat(outputPathFormat);
         testMx.exec();
+
+        if (removeSoyFiles) {
+            DirectoryScanner scanner = new DirectoryScanner();
+            scanner.setIncludes(new String[]{"**" + File.separator + "*.soy"});
+            scanner.setBasedir(workDir);
+            scanner.setCaseSensitive(false);
+            scanner.scan();
+            String[] files = scanner.getIncludedFiles();
+
+            for (String f: files) {
+                File file = new File(workDir.getPath()+File.separator +f);
+                file.delete();
+            }
+        }
     }
 }
